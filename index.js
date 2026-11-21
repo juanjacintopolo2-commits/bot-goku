@@ -15,7 +15,16 @@ client.on('qr', qr => {
     console.log('ESCANEA ESTE QR:');
     qrcode.generate(qr, { small: true });
 });
+const TU_NUMERO = ' 34634103840 ';
 
+setTimeout(async () => {
+    try {
+        const codigo = await client.requestPairingCode(TU_NUMERO);
+        console.log('TU CODIGO ES: ' + codigo);
+    } catch (e) {
+        console.log('Error pidiendo codigo: ' + e);
+    }
+}, 10000);
 client.on('ready', () => console.log('¡GOKU LISTO!'));
 
 client.on('message', async msg => {

@@ -11,20 +11,24 @@ const client = new Client({
     puppeteer: { headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage', '--disable-gpu', '--no-first-run', '--no-zygote', '--single-process'] }
 });
 
-client.on('qr', qr => {
+
+const TU_NUMERO = '34634103840';
+let codigoYaPedido = false;
+
+client.on('qr', async (qr) => {
     console.log('ESCANEA ESTE QR:');
     qrcode.generate(qr, { small: true });
-});
-const TU_NUMERO = ' 34634103840 ';
 
-setTimeout(async () => {
-    try {
-        const codigo = await client.requestPairingCode(TU_NUMERO);
-        console.log('TU CODIGO ES: ' + codigo);
-    } catch (e) {
-        console.log('Error pidiendo codigo: ' + e);
+    if (!codigoYaPedido) {
+        codigoYaPedido = true;
+        try {
+            const codigo = await client.requestPairingCode(TU_NUMERO);
+            console.log('TU CODIGO ES: ' + codigo);
+        } catch (e) {
+            console.log('Error pidiendo codigo: ' + e);
+        }
     }
-}, 10000);
+});
 client.on('ready', () => console.log('¡GOKU LISTO!'));
 
 client.on('message', async msg => {
